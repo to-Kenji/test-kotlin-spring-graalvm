@@ -1,0 +1,7 @@
+version: "3.9"
+
+services:
+  app:
+    image: test-kotlin-spring-graalvm:0.0.1-SNAPSHOT
+    ports:
+      - "8080:8080"
