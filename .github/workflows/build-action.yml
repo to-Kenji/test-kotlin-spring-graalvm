@@ -1,0 +1,57 @@
+name: Kotlin CI with Gradle
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set current datetime as env variable
+        env:
+          TZ: 'Asia/Tokyo'
+        run: echo "CURRENT_DATETIME=$(date +'%Y%m%d%H%M%S')" >> "$GITHUB_ENV"
+
+      - name: Set image name and tag
+        id: image-name-generator
+        run: |
+          GITLAB_REGISTRY_URL="registry.gitlab.com/test1340226/test-kotlin-spring-graalvm"
+          echo "GITLAB_REGISTRY_URL=${GITLAB_REGISTRY_URL}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${GITLAB_REGISTRY_URL}:${CURRENT_DATETIME}" >> $GITHUB_ENV
+          echo "GITLAB_USERNAME=to-Kenji" >> $GITHUB_ENV
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: bootBuildImage --imageName=${{ env.IMAGE_NAME }}
+
+      - name: Push to GitLab
+        env:
+          GITLAB_ACCESS_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
+        run: |
+          docker login -u ${{ env.GITLAB_USERNAME }} -p $GITLAB_ACCESS_TOKEN ${{ env.GITLAB_REGISTRY_URL }}
+          docker push ${{ env.IMAGE_NAME }}
