@@ -10,11 +10,20 @@ import org.springframework.web.client.RestTemplate
 class MyController {
 
     @PostMapping("/post")
-    fun post(@RequestBody request: String): String {
+    fun post(@RequestBody req: String): String {
 
+        println("-------------------------------------------MyController-------------------------------------------------")
         val restTemplate = RestTemplate()
 
-        return restTemplate.postForObject("https://httpbin.org/post", request, String::class.java)!!
+        val request = MyRequest(req, "test")
+        val response: String;
+        try {
+            // TODO: exchangeも試す
+            response = restTemplate.postForObject("https://httpbin.org/post", request, String::class.java)!!
+        } catch (e: Exception) {
+            throw e
+        }
+        return response
     }
 
     @GetMapping("/health")
@@ -22,3 +31,8 @@ class MyController {
         return "OK"
     }
 }
+
+data class MyRequest(val requestBody: String, val task: String)
+
+// TODO: 以下のようなネストしたクラスを試す
+// data class MyChildRequest(val title: String, val description: String)
