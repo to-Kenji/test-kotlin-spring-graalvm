@@ -15,7 +15,10 @@ class MyController {
         println("-------------------------------------------MyController-------------------------------------------------")
         val restTemplate = RestTemplate()
 
-        val request = MyApiRequest(req.str, "test")
+        val request = MyApiRequest()
+        request.requestBody = req.str
+        request.task = "task1"
+
         println("generated api request: $request")
         val response: String;
         try {
@@ -33,6 +36,12 @@ class MyController {
 }
 
 data class MyRequest(val str: String)
-data class MyApiRequest(val requestBody: String, val task: String)
+class MyApiRequest{
+    var requestBody: String = "initial"
+    var task: String = ""
+    override fun toString(): String {
+        return "MyApiRequest(requestBody='$requestBody', task='$task')"
+    }
+}
 
 // data class MyChildApiRequest(val title: String, val description: String)
