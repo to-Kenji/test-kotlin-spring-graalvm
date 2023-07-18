@@ -25,7 +25,7 @@ class MyController {
         println("generated api request: $request")
         val response: String;
         try {
-            response = restTemplate.postForObject("http://jsonplaceholder.typicode.com/posts", request, String::class.java)!!
+            response = restTemplate.postForObject("https://httpbin.org/post", request, String::class.java)!!
         } catch (e: Exception) {
             throw e
         }
@@ -43,13 +43,13 @@ data class MyApiRequest(val requestBody: String, val task: String)
 
 // data class MyChildApiRequest(val title: String, val description: String)
 
-// @Configuration
-// @RegisterReflectionForBinding(RestTemplate::class)
-// @ImportRuntimeHints(MyConfiguration.AppRunTimeHintsRegister::class)
-// class MyConfiguration {
-//     class AppRunTimeHintsRegister : RuntimeHintsRegistrar {
-//         override fun registerHints(hints: RuntimeHints, classLoader: ClassLoader?) {
-//             hints.reflection().registerType(RestTemplate::class.java, MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INVOKE_DECLARED_METHODS, MemberCategory.DECLARED_CLASSES)
-//         }
-//     }
-// }
+@Configuration
+@RegisterReflectionForBinding(RestTemplate::class)
+@ImportRuntimeHints(MyConfiguration.AppRunTimeHintsRegister::class)
+class MyConfiguration {
+    class AppRunTimeHintsRegister : RuntimeHintsRegistrar {
+        override fun registerHints(hints: RuntimeHints, classLoader: ClassLoader?) {
+            hints.reflection().registerType(RestTemplate::class.java, MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INVOKE_DECLARED_METHODS, MemberCategory.DECLARED_CLASSES)
+        }
+    }
+}
