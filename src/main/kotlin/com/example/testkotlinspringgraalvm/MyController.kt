@@ -1,6 +1,7 @@
 package com.example.testkotlinspringgraalvm
 
 import org.springframework.aot.hint.annotation.RegisterReflectionForBinding
+import org.springframework.context.annotation.Configuration
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -9,15 +10,15 @@ import org.springframework.web.client.RestTemplate
 class MyController {
 
     @PostMapping("/post")
-    @RegisterReflectionForBinding(MyRequest::class, MyApiRequest::class)
+    @RegisterReflectionForBinding(MyRequest::class)
     fun post(@RequestBody req: MyRequest): String {
 
+        println(req)
         val restTemplate = RestTemplate()
-        val myApiRequest = MyApiRequest(req.str, "test")
 
         val response: String;
         try {
-            response = restTemplate.postForObject("http://jsonplaceholder.typicode.com/posts", myApiRequest, String::class.java)!!
+            response = restTemplate.postForObject("http://jsonplaceholder.typicode.com/posts", req, String::class.java)!!
         } catch (e: Exception) {
             throw e
         }
@@ -26,7 +27,10 @@ class MyController {
 }
 
 data class MyRequest(val str: String)
-data class MyApiRequest(val requestBody: String, val task: String)
+// data class MyApiRequest(val requestBody: String, val task: String)
+
+
+// data class MyChildApiRequest(val title: String, val description: String)
 
 // @Configuration
 // @RegisterReflectionForBinding(RestTemplate::class)
