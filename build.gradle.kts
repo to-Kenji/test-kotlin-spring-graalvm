@@ -41,3 +41,11 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+graalvmNative {
+	binaries {
+		named("main") {
+			buildArgs.add("-march=x86-64-v2")
+		}
+	}
+}
