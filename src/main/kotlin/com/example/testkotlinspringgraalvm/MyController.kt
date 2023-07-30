@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.client.RestTemplate
 
 @RestController
+@RegisterReflectionForBinding(MyRequest::class)
 class MyController {
 
     @PostMapping("/post")
