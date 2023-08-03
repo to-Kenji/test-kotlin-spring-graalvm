@@ -13,17 +13,15 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.client.RestTemplate
 
 @RestController
-@RegisterReflectionForBinding(MyRequest::class)
 class MyController {
 
     @PostMapping("/post")
+    @RegisterReflectionForBinding(MyApiRequest::class)
     fun post(@RequestBody req: MyRequest): String {
 
-        println("-------------------------------------------MyController-------------------------------------------------")
         val restTemplate = RestTemplate()
 
         val request = MyApiRequest(req.str, "test")
-        println("generated api request: $request")
         val response: String;
         try {
             response = restTemplate.postForObject("https://httpbin.org/post", request, String::class.java)!!
@@ -41,16 +39,3 @@ class MyController {
 
 data class MyRequest(val str: String)
 data class MyApiRequest(val requestBody: String, val task: String)
-
-// data class MyChildApiRequest(val title: String, val description: String)
-
-@Configuration
-@RegisterReflectionForBinding(RestTemplate::class)
-@ImportRuntimeHints(MyConfiguration.AppRunTimeHintsRegister::class)
-class MyConfiguration {
-    class AppRunTimeHintsRegister : RuntimeHintsRegistrar {
-        override fun registerHints(hints: RuntimeHints, classLoader: ClassLoader?) {
-            hints.reflection().registerType(RestTemplate::class.java, MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INVOKE_DECLARED_METHODS, MemberCategory.DECLARED_CLASSES)
-        }
-    }
-}
