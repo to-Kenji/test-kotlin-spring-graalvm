@@ -6,9 +6,10 @@ RUN apt-get update -y && \
 # The application's .jar file
 ARG JAR_FILE=build/native/nativeCompile/test-kotlin-spring-graalvm
 
+WORKDIR /app
 # Add the application's .jar to the container
 COPY ${JAR_FILE} /app
 # RUN chmod +x ./app/test-kotlin-spring-graalvm
 
 # Run the app command
-CMD ["./app/test-kotlin-spring-graalvm"]
+CMD ["./test-kotlin-spring-graalvm"]
