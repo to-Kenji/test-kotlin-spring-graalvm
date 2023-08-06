@@ -8,7 +8,7 @@ ARG JAR_FILE=build/native/nativeCompile/test-kotlin-spring-graalvm
 
 # Add the application's .jar to the container
 COPY ${JAR_FILE} /app
-RUN chmod +x ./app/test-kotlin-spring-graalvm
+# RUN chmod +x ./app/test-kotlin-spring-graalvm
 
 # Run the app command
 CMD ["./app/test-kotlin-spring-graalvm"]
