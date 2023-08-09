@@ -17,14 +17,14 @@ class MyController {
 
     @PostMapping("/post")
     @RegisterReflectionForBinding(MyApiRequest::class)
-    fun post(@RequestBody req: MyRequest): String {
+    fun post(@RequestBody req: MyRequest): MyApiResponse{
 
         val restTemplate = RestTemplate()
 
         val request = MyApiRequest(req.str, "test")
-        val response: String;
+        val response: MyApiResponse
         try {
-            response = restTemplate.postForObject("https://httpbin.org/post", request, String::class.java)!!
+            response = restTemplate.postForObject("https://httpbin.org/post", request, MyApiResponse::class.java)!!
         } catch (e: Exception) {
             throw e
         }
@@ -39,3 +39,5 @@ class MyController {
 
 data class MyRequest(val str: String)
 data class MyApiRequest(val requestBody: String, val task: String)
+data class MyApiResponse(val data: String, val json: MyApiResponseJson)
+data class MyApiResponseJson(val requestBody: String, val task: String)
