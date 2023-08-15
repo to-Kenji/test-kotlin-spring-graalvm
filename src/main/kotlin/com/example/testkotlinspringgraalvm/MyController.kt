@@ -1,11 +1,8 @@
 package com.example.testkotlinspringgraalvm
 
-import org.springframework.aot.hint.MemberCategory
-import org.springframework.aot.hint.RuntimeHints
-import org.springframework.aot.hint.RuntimeHintsRegistrar
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import org.springframework.aot.hint.annotation.RegisterReflectionForBinding
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.ImportRuntimeHints
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -39,5 +36,17 @@ class MyController {
 
 data class MyRequest(val str: String)
 data class MyApiRequest(val requestBody: String, val task: String)
-data class MyApiResponse(val data: String, val json: MyApiResponseJson)
-data class MyApiResponseJson(val requestBody: String, val task: String)
+@Serializable
+data class MyApiResponse(
+    @SerialName("data")
+    val data: String,
+    @SerialName("json")
+    val json: MyApiResponseJson
+)
+@Serializable
+data class MyApiResponseJson(
+    @SerialName("requestBody")
+    val requestBody: String,
+    @SerialName("task")
+    val task: String
+)
