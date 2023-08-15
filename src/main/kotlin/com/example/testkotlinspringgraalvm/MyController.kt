@@ -38,10 +38,22 @@ data class MyRequest(val str: String)
 data class MyApiRequest(val requestBody: String, val task: String)
 @Serializable
 data class MyApiResponse(
+    @SerialName("args")
+    val args: MyApiResponseArgs,
     @SerialName("data")
     val data: String,
+    @SerialName("files")
+    val files: MyApiResponseFiles,
+    @SerialName("form")
+    val form: MyApiResponseForm,
+    @SerialName("headers")
+    val headers: MyApiResponseHeaders,
     @SerialName("json")
-    val json: MyApiResponseJson
+    val json: MyApiResponseJson,
+    @SerialName("origin")
+    val origin: String,
+    @SerialName("url")
+    val url: String
 )
 @Serializable
 data class MyApiResponseJson(
@@ -49,4 +61,29 @@ data class MyApiResponseJson(
     val requestBody: String,
     @SerialName("task")
     val task: String
+)
+
+@Serializable
+class MyApiResponseArgs{}
+
+@Serializable
+class MyApiResponseFiles{}
+
+@Serializable
+class MyApiResponseForm{}
+
+@Serializable
+class MyApiResponseHeaders(
+    @SerialName("Accept")
+    val accept: String,
+    @SerialName("Content-Length")
+    val contentLength: String,
+    @SerialName("Content-Type")
+    val contentType: String,
+    @SerialName("Host")
+    val host: String,
+    @SerialName("User-Agent")
+    val userAgent: String,
+    @SerialName("X-Amzn-Trace-Id")
+    val xAmznTraceId: String
 )
