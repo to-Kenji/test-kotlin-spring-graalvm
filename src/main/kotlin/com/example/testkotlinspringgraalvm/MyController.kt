@@ -35,7 +35,12 @@ class MyController {
 }
 
 data class MyRequest(val str: String)
-data class MyApiRequest(val requestBody: String, val task: String)
+@Serializable
+data class MyApiRequest(
+    @SerialName("requestBody")
+    val requestBody: String,
+    @SerialName("task")
+    val task: String)
 @Serializable
 data class MyApiResponse(
     @SerialName("args")
